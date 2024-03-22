@@ -48,8 +48,8 @@ namespace Libary.Controllers
         // GET: Publications/Create
         public IActionResult Create()
         {
-            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "Id");
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id");
+            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "EpochName");
+            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName");
             return View();
         }
 
@@ -66,8 +66,8 @@ namespace Libary.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "Id", publication.EpochId);
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", publication.GenreId);
+            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "EpochName", publication.EpochId);
+            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName", publication.GenreId);
             return View(publication);
         }
 

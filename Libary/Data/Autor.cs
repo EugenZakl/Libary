@@ -6,8 +6,9 @@ namespace Libary.Data;
 public partial class Autor
 {
     public int Id { get; set; }
-    
+
     public int RegionId { get; set; }
+
     [Required(ErrorMessage = "Хоча б одне поле не повинне бути порожнім")]
     public string? AutorName { get; set; }
 

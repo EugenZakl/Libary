@@ -21,9 +21,9 @@ public partial class Publication
 
     public int? Year { get; set; }
 
-    public virtual Epoch Epoch { get; set; } = null!;
+    public virtual Epoch? Epoch { get; set; }
 
-    public virtual Genre Genre { get; set; } = null!;
+    public virtual Genre? Genre { get; set; }
 
     public virtual ICollection<LibaryCheck> LibaryChecks { get; set; } = new List<LibaryCheck>();
 
