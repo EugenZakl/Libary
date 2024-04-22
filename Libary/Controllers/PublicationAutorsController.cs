@@ -49,7 +49,7 @@ namespace Libary.Controllers
         public IActionResult Create()
         {
             ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id");
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id");
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName");
             return View();
         }
 
@@ -67,7 +67,7 @@ namespace Libary.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.Id);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", publicationAutor.PublicationId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", publicationAutor.PublicationId);
             return View(publicationAutor);
         }
 
@@ -85,7 +85,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
             ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.Id);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", publicationAutor.PublicationId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", publicationAutor.PublicationId);
             return View(publicationAutor);
         }
 
@@ -122,7 +122,7 @@ namespace Libary.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.Id);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", publicationAutor.PublicationId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", publicationAutor.PublicationId);
             return View(publicationAutor);
         }
 

@@ -25,3 +25,15 @@
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+@{
+    string errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+<h1>Delete</h1>

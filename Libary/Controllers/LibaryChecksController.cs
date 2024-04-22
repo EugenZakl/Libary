@@ -48,8 +48,8 @@ namespace Libary.Controllers
         // GET: LibaryChecks/Create
         public IActionResult Create()
         {
-            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "Id");
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id");
+            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "PostOfficeAdress");
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName");
             return View();
         }
 
@@ -66,8 +66,8 @@ namespace Libary.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "Id", libaryCheck.DeliveryId);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", libaryCheck.PublicationId);
+            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "PostOfficeAdress", libaryCheck.DeliveryId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", libaryCheck.PublicationId);
             return View(libaryCheck);
         }
 
@@ -84,8 +84,8 @@ namespace Libary.Controllers
             {
                 return NotFound();
             }
-            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "Id", libaryCheck.DeliveryId);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", libaryCheck.PublicationId);
+            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "PostOfficeAdress", libaryCheck.DeliveryId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", libaryCheck.PublicationId);
             return View(libaryCheck);
         }
 
@@ -121,8 +121,8 @@ namespace Libary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "Id", libaryCheck.DeliveryId);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", libaryCheck.PublicationId);
+            ViewData["DeliveryId"] = new SelectList(_context.Deliveries, "Id", "PostOfficeAdress", libaryCheck.DeliveryId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", libaryCheck.PublicationId);
             return View(libaryCheck);
         }
 

@@ -1,31 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace Libary.Data;
-
-public partial class Publication
+namespace Libary.Data
 {
-    public int Id { get; set; }
+    public partial class Publication
+    {
+        public int Id { get; set; }
 
-    public int GenreId { get; set; }
+        public int GenreId { get; set; }
 
-    public int EpochId { get; set; }
+        public int EpochId { get; set; }
 
-    public string? BookName { get; set; }
+        [RegularExpression(@"^[^\d]+$", ErrorMessage = "Поле не може містити числа")]
+        public string? BookName { get; set; }
 
-    public string? Annotation { get; set; }
+        [RegularExpression(@"^[^\d]+$", ErrorMessage = "Поле не може містити числа")]
+        public string? Annotation { get; set; }
 
-    public int? PageCout { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Кількість сторінок повинна бути не менше 0")]
+        public int? PageCout { get; set; }
 
-    public int? Price { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Ціна повинна бути не менше 0")]
+        public int? Price { get; set; }
 
-    public int? Year { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Рік має бути більше 0")]
+        public int? Year { get; set; }
 
-    public virtual Epoch? Epoch { get; set; }
+        public virtual Epoch? Epoch { get; set; }
 
-    public virtual Genre? Genre { get; set; }
+        public virtual Genre? Genre { get; set; }
 
-    public virtual ICollection<LibaryCheck> LibaryChecks { get; set; } = new List<LibaryCheck>();
+        public virtual ICollection<LibaryCheck> LibaryChecks { get; set; } = new List<LibaryCheck>();
 
-    public virtual ICollection<PublicationAutor> PublicationAutors { get; set; } = new List<PublicationAutor>();
+        public virtual ICollection<PublicationAutor> PublicationAutors { get; set; } = new List<PublicationAutor>();
+    }
 }

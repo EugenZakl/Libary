@@ -47,7 +47,7 @@ namespace Libary.Controllers
         // GET: Deliveries/Create
         public IActionResult Create()
         {
-            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "Id");
+            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "NickName");
             return View();
         }
 
@@ -64,7 +64,7 @@ namespace Libary.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "Id", delivery.ReaderId);
+            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "NickName", delivery.ReaderId);
             return View(delivery);
         }
 
@@ -81,7 +81,7 @@ namespace Libary.Controllers
             {
                 return NotFound();
             }
-            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "Id", delivery.ReaderId);
+            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "NickName", delivery.ReaderId);
             return View(delivery);
         }
 
@@ -117,7 +117,7 @@ namespace Libary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "Id", delivery.ReaderId);
+            ViewData["ReaderId"] = new SelectList(_context.Readers, "Id", "NickName", delivery.ReaderId);
             return View(delivery);
         }
 

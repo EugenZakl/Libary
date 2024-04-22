@@ -116,21 +116,28 @@ namespace Libary.Controllers
         }
 
         // GET: Regions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var region = await _context.Regions
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var region = await _context.Regions.FindAsync(id);
             if (region == null)
             {
                 return NotFound();
             }
 
-            return View(region);
+            // Проверяем, используется ли регион в таблице Author
+            bool isRegionUsed = await _context.Autors.AnyAsync(a => a.RegionId == id);
+
+            if (isRegionUsed)
+            {
+                // Если регион используется, отображаем предупреждение
+                TempData["ErrorMessage"] = "Cannot delete the region because it is associated with authors.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Если регион не используется, удаляем его
+            _context.Regions.Remove(region);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Regions/Delete/5
