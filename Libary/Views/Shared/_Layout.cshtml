@@ -54,6 +54,21 @@
                         </li>
                     </ul>
                 </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <p>@User.Identity.Name</p>
+
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <input type="submit" value="Вихід" />
+                    </form>
+                }
+                else
+                {
+                    <div class="Aboba">
+                    <a asp-controller="Account" asp-action="Login" class="Aboba">Вхід</a>
+                    <a asp-controller="Account" asp-action="Register">Реєстація</a>
+                    </div>
+                }
             </div>
         </nav>
     </header>
