@@ -84,8 +84,8 @@ namespace Libary.Controllers
             {
                 return NotFound();
             }
-            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "Id", publication.EpochId);
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", publication.GenreId);
+            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "EpochName", publication.EpochId);
+            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName", publication.GenreId);
             return View(publication);
         }
 
@@ -121,8 +121,8 @@ namespace Libary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "Id", publication.EpochId);
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "Id", publication.GenreId);
+            ViewData["EpochId"] = new SelectList(_context.Epoches, "Id", "EpochName", publication.EpochId);
+            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName", publication.GenreId);
             return View(publication);
         }
 

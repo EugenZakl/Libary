@@ -13,25 +13,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.BookName)
+                Назва книги
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Annotation)
+                Анотація
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PageCout)
+                Кількість сторінок
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                Ціна
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Year)
+                Рік
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Epoch)
+                Епоха
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+               Жанр
             </th>
             <th></th>
         </tr>
@@ -55,10 +55,10 @@
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Epoch.Id)
+                    @Html.DisplayFor(modelItem => item.Epoch.EpochName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Genre.Id)
+                    @Html.DisplayFor(modelItem => item.Genre.GenreName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

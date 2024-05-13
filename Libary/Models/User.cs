@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Libary.Data
+namespace Libary.Models
 {
     public class User : IdentityUser
+
     {
         public int Year { get; set; }
-    }
 
+    }
 }
