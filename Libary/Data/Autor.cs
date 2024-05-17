@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace Libary.Data;
 
-public partial class Autor
+public partial class Autor : Entity
 {
     public int Id { get; set; }
 

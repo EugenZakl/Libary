@@ -21,30 +21,36 @@ namespace Libary.Controllers
             {
                 return View();
             }
-            [HttpPost]
-            public async Task<IActionResult> Register(RegisterViewModel model)
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                User user = new User { Email = model.Email, UserName = model.Email };
+
+                // Додаємо користувача
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
                 {
-                    User user = new User { Email = model.Email, UserName = model.Email };
-                    // додаємо користувача
-                    var result = await _userManager.CreateAsync(user, model.Password);
-                    if (result.Succeeded)
+                    // Установка ролі користувача
+                    await _userManager.AddToRoleAsync(user, "User");
+
+                    // Установка кукі
+                    await _signInManager.SignInAsync(user, false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
                     {
-                        // установка кукі
-                        await _signInManager.SignInAsync(user, false);
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-                return View(model);
             }
+            return View(model);
+        }
+
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {

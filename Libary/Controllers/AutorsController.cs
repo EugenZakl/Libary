@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Libary.Data;
+using Libary.Services;
 
 namespace Libary.Controllers
 {
@@ -158,6 +159,41 @@ namespace Libary.Controllers
         private bool AutorExists(int id)
         {
             return _context.Autors.Any(e => e.Id == id);
+        }
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken)
+
+        {
+            var factory = new AutorDataPortServiceFactory(_context);
+            var importService = factory.GetImportService(fileExcel.ContentType);
+
+            using var stream = fileExcel.OpenReadStream();
+            await importService.ImportFromStreamAsync(stream, cancellationToken);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Export([FromQuery] string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    CancellationToken cancellationToken = default)
+        {
+            var factory = new AutorDataPortServiceFactory(_context);
+            var exportService = factory.GetExportService(contentType);
+
+            var memoryStream = new MemoryStream();
+
+            await exportService.WriteToAsync(memoryStream, cancellationToken);
+
+            await memoryStream.FlushAsync(cancellationToken);
+            memoryStream.Position = 0;
+
+            return new FileStreamResult(memoryStream, contentType)
+            {
+                FileDownloadName = $"autors_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+            };
         }
     }
 }
