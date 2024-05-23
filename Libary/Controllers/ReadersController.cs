@@ -55,7 +55,7 @@ namespace Libary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,NickName,Email,Address,FirstName,LastName,PhoneNumber")] Reader reader)
         {
-            if (ModelState.IsValid)
+            
             {
                 _context.Add(reader);
                 await _context.SaveChangesAsync();
@@ -92,7 +92,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            
             {
                 try
                 {

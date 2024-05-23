@@ -58,7 +58,7 @@ namespace Libary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PostOfficeNumber,PostOfficeAdress,ReaderId")] Delivery delivery)
         {
-            if (ModelState.IsValid)
+            
             {
                 _context.Add(delivery);
                 await _context.SaveChangesAsync();
@@ -97,7 +97,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            
             {
                 try
                 {

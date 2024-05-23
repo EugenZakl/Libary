@@ -21,7 +21,7 @@ namespace Libary.Controllers
         // GET: PublicationAutors
         public async Task<IActionResult> Index()
         {
-            var dblibaryContext = _context.PublicationAutors.Include(p => p.IdNavigation).Include(p => p.Publication);
+            var dblibaryContext = _context.PublicationAutors.Include(p => p.Autor).Include(p => p.Publication);
             return View(await dblibaryContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace Libary.Controllers
             }
 
             var publicationAutor = await _context.PublicationAutors
-                .Include(p => p.IdNavigation)
+                .Include(p => p.Autor)
                 .Include(p => p.Publication)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (publicationAutor == null)
@@ -48,8 +48,8 @@ namespace Libary.Controllers
         // GET: PublicationAutors/Create
         public IActionResult Create()
         {
-            ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id");
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName");
+            ViewData["AutorId"] = new SelectList(_context.Autors, "Id", "Id");
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id");
             return View();
         }
 
@@ -58,16 +58,16 @@ namespace Libary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PublicationId")] PublicationAutor publicationAutor)
+        public async Task<IActionResult> Create([Bind("Id,PublicationId,AutorId")] PublicationAutor publicationAutor)
         {
-            if (ModelState.IsValid)
+            
             {
                 _context.Add(publicationAutor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.Id);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", publicationAutor.PublicationId);
+            ViewData["AutorId"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.AutorId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", publicationAutor.PublicationId);
             return View(publicationAutor);
         }
 
@@ -84,8 +84,8 @@ namespace Libary.Controllers
             {
                 return NotFound();
             }
-            ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.Id);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", publicationAutor.PublicationId);
+            ViewData["AutorId"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.AutorId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", publicationAutor.PublicationId);
             return View(publicationAutor);
         }
 
@@ -94,14 +94,14 @@ namespace Libary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PublicationId")] PublicationAutor publicationAutor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PublicationId,AutorId")] PublicationAutor publicationAutor)
         {
             if (id != publicationAutor.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            
             {
                 try
                 {
@@ -121,8 +121,8 @@ namespace Libary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Id"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.Id);
-            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "BookName", publicationAutor.PublicationId);
+            ViewData["AutorId"] = new SelectList(_context.Autors, "Id", "Id", publicationAutor.AutorId);
+            ViewData["PublicationId"] = new SelectList(_context.Publications, "Id", "Id", publicationAutor.PublicationId);
             return View(publicationAutor);
         }
 
@@ -135,7 +135,7 @@ namespace Libary.Controllers
             }
 
             var publicationAutor = await _context.PublicationAutors
-                .Include(p => p.IdNavigation)
+                .Include(p => p.Autor)
                 .Include(p => p.Publication)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (publicationAutor == null)

@@ -55,7 +55,7 @@ namespace Libary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,RegionName")] Region region)
         {
-            if (ModelState.IsValid)
+            
             {
                 _context.Add(region);
                 await _context.SaveChangesAsync();
@@ -92,7 +92,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            
             {
                 try
                 {

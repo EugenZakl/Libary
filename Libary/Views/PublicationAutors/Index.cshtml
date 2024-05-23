@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                Порядок
+                @Html.DisplayNameFor(model => model.Autor)
             </th>
             <th>
-                Назва книги
+                @Html.DisplayNameFor(model => model.Publication)
             </th>
             <th></th>
         </tr>
@@ -25,7 +25,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IdNavigation.Id)
+                @Html.DisplayFor(modelItem => item.Autor.AutorName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Publication.BookName)

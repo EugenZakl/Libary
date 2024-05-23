@@ -24,7 +24,7 @@ namespace Libary.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            
             {
                 User user = new User { Email = model.Email, UserName = model.Email };
 
@@ -62,7 +62,7 @@ namespace Libary.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             ModelState.Remove("ReturnUrl"); 
-            if (ModelState.IsValid)
+            
             {
                 var result =
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);

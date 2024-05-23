@@ -59,7 +59,6 @@ namespace Libary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,RegionId,AutorName,Pseudonym")] Autor autor)
         {
-            if (ModelState.IsValid)
             {
                 _context.Add(autor);
                 await _context.SaveChangesAsync();
@@ -98,7 +97,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            
             {
                 try
                 {

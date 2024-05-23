@@ -9,7 +9,9 @@ public partial class PublicationAutor
 
     public int PublicationId { get; set; }
 
-    public virtual Autor IdNavigation { get; set; } = null!;
+    public int AutorId { get; set; }
+
+    public virtual Autor Autor { get; set; } = null!;
 
     public virtual Publication Publication { get; set; } = null!;
 }
