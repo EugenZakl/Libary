@@ -49,13 +49,11 @@ namespace Libary.Controllers
         }
 
         // POST: Genres/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,GenreName")] Genre genre)
         {
-            
+            if (ModelState.IsValid)
             {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
@@ -81,8 +79,6 @@ namespace Libary.Controllers
         }
 
         // POST: Genres/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,GenreName")] Genre genre)
@@ -92,7 +88,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -139,11 +135,20 @@ namespace Libary.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var genre = await _context.Genres.FindAsync(id);
-            if (genre != null)
+            if (genre == null)
             {
-                _context.Genres.Remove(genre);
+                return NotFound();
             }
 
+            // Check if the genre is used in any publications
+            var publicationsWithGenre = await _context.Publications.AnyAsync(p => p.GenreId == id);
+            if (publicationsWithGenre)
+            {
+                TempData["ErrorMessage"] = "Cannot delete genre because it is being used in publications.";
+                return RedirectToAction(nameof(Delete), new { id = id });
+            }
+
+            _context.Genres.Remove(genre);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

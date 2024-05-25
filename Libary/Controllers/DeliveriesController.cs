@@ -52,13 +52,11 @@ namespace Libary.Controllers
         }
 
         // POST: Deliveries/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PostOfficeNumber,PostOfficeAdress,ReaderId")] Delivery delivery)
         {
-            
+            if (ModelState.IsValid)
             {
                 _context.Add(delivery);
                 await _context.SaveChangesAsync();
@@ -86,8 +84,6 @@ namespace Libary.Controllers
         }
 
         // POST: Deliveries/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,PostOfficeNumber,PostOfficeAdress,ReaderId")] Delivery delivery)
@@ -97,7 +93,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -146,12 +142,21 @@ namespace Libary.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var delivery = await _context.Deliveries.FindAsync(id);
+
+            // Перевірка наявності доставки в LibaryCheck
+            bool isDeliveryInUse = await _context.LibaryChecks.AnyAsync(lc => lc.DeliveryId == id);
+            if (isDeliveryInUse)
+            {
+                // Додати повідомлення про помилку
+                TempData["ErrorMessage"] = "Неможливо видалити доставку, оскільки вона використовується в LibaryCheck.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             if (delivery != null)
             {
                 _context.Deliveries.Remove(delivery);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

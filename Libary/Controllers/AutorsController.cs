@@ -53,12 +53,11 @@ namespace Libary.Controllers
         }
 
         // POST: Autors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,RegionId,AutorName,Pseudonym")] Autor autor)
         {
+            if (ModelState.IsValid)
             {
                 _context.Add(autor);
                 await _context.SaveChangesAsync();
@@ -86,8 +85,6 @@ namespace Libary.Controllers
         }
 
         // POST: Autors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,RegionId,AutorName,Pseudonym")] Autor autor)
@@ -97,7 +94,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -146,12 +143,21 @@ namespace Libary.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var autor = await _context.Autors.FindAsync(id);
+
+            // Перевірка наявності книг, написаних автором
+            bool isAutorInUse = await _context.PublicationAutors.AnyAsync(b => b.AutorId == id);
+            if (isAutorInUse)
+            {
+                // Додати повідомлення про помилку
+                TempData["ErrorMessage"] = "Неможливо видалити автора, оскільки він використовується в інших записах.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             if (autor != null)
             {
                 _context.Autors.Remove(autor);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -159,14 +165,15 @@ namespace Libary.Controllers
         {
             return _context.Autors.Any(e => e.Id == id);
         }
+
         [HttpGet]
         public IActionResult Import()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken)
-
         {
             var factory = new AutorDataPortServiceFactory(_context);
             var importService = factory.GetImportService(fileExcel.ContentType);
@@ -175,6 +182,7 @@ namespace Libary.Controllers
             await importService.ImportFromStreamAsync(stream, cancellationToken);
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         public async Task<IActionResult> Export([FromQuery] string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     CancellationToken cancellationToken = default)

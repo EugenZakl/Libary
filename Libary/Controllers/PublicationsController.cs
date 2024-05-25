@@ -54,13 +54,11 @@ namespace Libary.Controllers
         }
 
         // POST: Publications/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,GenreId,EpochId,BookName,Annotation,PageCout,Price,Year")] Publication publication)
         {
-            
+            if (ModelState.IsValid)
             {
                 _context.Add(publication);
                 await _context.SaveChangesAsync();
@@ -90,8 +88,6 @@ namespace Libary.Controllers
         }
 
         // POST: Publications/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,GenreId,EpochId,BookName,Annotation,PageCout,Price,Year")] Publication publication)
@@ -101,7 +97,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -152,12 +148,21 @@ namespace Libary.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var publication = await _context.Publications.FindAsync(id);
+
+            // Перевірка наявності публікацій у LibaryCheck
+            bool isPublicationInUse = await _context.LibaryChecks.AnyAsync(l => l.PublicationId == id);
+            if (isPublicationInUse)
+            {
+                // Додати повідомлення про помилку
+                TempData["ErrorMessage"] = "Неможливо видалити публікацію, оскільки вона використовується в перевірках бібліотеки.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             if (publication != null)
             {
                 _context.Publications.Remove(publication);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

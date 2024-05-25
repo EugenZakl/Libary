@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Libary.Data;
 
@@ -49,13 +48,11 @@ namespace Libary.Controllers
         }
 
         // POST: Readers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,NickName,Email,Address,FirstName,LastName,PhoneNumber")] Reader reader)
         {
-            
+            if (ModelState.IsValid)
             {
                 _context.Add(reader);
                 await _context.SaveChangesAsync();
@@ -81,8 +78,6 @@ namespace Libary.Controllers
         }
 
         // POST: Readers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,NickName,Email,Address,FirstName,LastName,PhoneNumber")] Reader reader)
@@ -92,7 +87,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -139,12 +134,21 @@ namespace Libary.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reader = await _context.Readers.FindAsync(id);
+
+            // Перевірка наявності читача в доставках
+            bool isReaderInUse = await _context.Deliveries.AnyAsync(d => d.ReaderId == id);
+            if (isReaderInUse)
+            {
+                // Додати повідомлення про помилку
+                TempData["ErrorMessage"] = "Неможливо видалити читача, оскільки він використовується в доставках.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             if (reader != null)
             {
                 _context.Readers.Remove(reader);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -49,13 +49,11 @@ namespace Libary.Controllers
         }
 
         // POST: Regions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,RegionName")] Region region)
         {
-            
+            if (ModelState.IsValid)
             {
                 _context.Add(region);
                 await _context.SaveChangesAsync();
@@ -81,8 +79,6 @@ namespace Libary.Controllers
         }
 
         // POST: Regions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,RegionName")] Region region)
@@ -92,7 +88,7 @@ namespace Libary.Controllers
                 return NotFound();
             }
 
-            
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -116,28 +112,21 @@ namespace Libary.Controllers
         }
 
         // GET: Regions/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            var region = await _context.Regions.FindAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var region = await _context.Regions
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (region == null)
             {
                 return NotFound();
             }
 
-            // Проверяем, используется ли регион в таблице Author
-            bool isRegionUsed = await _context.Autors.AnyAsync(a => a.RegionId == id);
-
-            if (isRegionUsed)
-            {
-                // Если регион используется, отображаем предупреждение
-                TempData["ErrorMessage"] = "Cannot delete the region because it is associated with authors.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            // Если регион не используется, удаляем его
-            _context.Regions.Remove(region);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return View(region);
         }
 
         // POST: Regions/Delete/5
@@ -146,11 +135,20 @@ namespace Libary.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var region = await _context.Regions.FindAsync(id);
-            if (region != null)
+            if (region == null)
             {
-                _context.Regions.Remove(region);
+                return NotFound();
             }
 
+            bool isRegionUsed = await _context.Autors.AnyAsync(a => a.RegionId == id);
+
+            if (isRegionUsed)
+            {
+                TempData["ErrorMessage"] = "Cannot delete the region because it is associated with authors.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Regions.Remove(region);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
